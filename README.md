@@ -90,7 +90,6 @@ git clone https://github.com/bioexcel/biobb_wf_flexdyn.git
 cd biobb_wf_flexdyn
 conda env create -f conda_env/environment.yml
 conda activate biobb_wf_flexdyn
-jupyter nbextension enable python-markdown/main
 jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
 ``` 
 
