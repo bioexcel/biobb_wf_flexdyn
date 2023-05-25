@@ -15,4 +15,4 @@ python:
    install:
       - requirements: biobb_wf_flexdyn/docs/requirements.txt
       - method: pip
-        path: sphinx-markdown-tables
+        path: project/sphinx-markdown-tables
