@@ -14,5 +14,3 @@ python:
    version: "3.7"
    install:
       - requirements: biobb_wf_flexdyn/docs/requirements.txt
-      - method: pip
-        path: project/sphinx-markdown-tables
