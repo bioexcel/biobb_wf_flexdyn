@@ -5,8 +5,8 @@ channels:
 dependencies:
   - jupyter_client==7.3.2 
   - tornado==6.1
-  - biobb_flexdyn==4.0.2
-  - biobb_flexserv==4.0.0
+  - biobb_flexdyn==4.0.3
+  - biobb_flexserv==4.0.2
   - biobb_io==4.0.0
   - biobb_structure_utils==4.0.0
   - biobb_gromacs==4.0.0
