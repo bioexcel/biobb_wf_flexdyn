@@ -15,6 +15,7 @@ dependencies:
   - ipykernel
   - nb_conda
   - nb_conda_kernels
+  - importlib_metadata
   - plotly
   - nglview
   - conda
