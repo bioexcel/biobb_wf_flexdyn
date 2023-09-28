@@ -82,10 +82,24 @@ The notebook is divided in two main blocks:
 
 ### Conda Installation and Launch
 
+Take into account that, for this specific workflow, there are two environment files, one for linux OS and the other for mac OS:
+
+#### linux
+
 ```console
 git clone https://github.com/bioexcel/biobb_wf_flexdyn.git
 cd biobb_wf_flexdyn
-conda env create -f conda_env/environment.yml
+conda env create -f conda_env/environment.linux.yml
+conda activate biobb_wf_flexdyn
+jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
+``` 
+
+#### macos
+
+```console
+git clone https://github.com/bioexcel/biobb_wf_flexdyn.git
+cd biobb_wf_flexdyn
+conda env create -f conda_env/environment.macos.yml
 conda activate biobb_wf_flexdyn
 jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
 ``` 
