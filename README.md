@@ -113,7 +113,7 @@ jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
 
 Click here to [view tutorial in Read the Docs](https://biobb-wf-flexdyn.readthedocs.io/en/latest/tutorial.html)
 
-Click here to [execute tutorial in Binder](https://bioexcel-binder.tsi.ebi.ac.uk/v2/gh/bioexcel/biobb_wf_flexdyn/main?filepath=biobb_wf_flexdyn%2Fnotebooks%2Fbiobb_wf_flexdyn.ipynb)
+Click here to [execute tutorial in Binder](https://mybinder.org/v2/gh/bioexcel/biobb_wf_flexdyn/HEAD?labpath=biobb_wf_flexdyn%2Fnotebooks%2Fbiobb_wf_flexdyn.ipynb)
 
 ***
 
