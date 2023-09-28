@@ -77,11 +77,11 @@ The particular structure used is the **complex between ADENYLATE KINASE from Esc
 
 ### Auxiliar libraries used
 
-* [nb_conda_kernels](https://github.com/Anaconda-Platform/nb_conda_kernels): Enables a Jupyter Notebook or JupyterLab application in one conda environment to access kernels for Python, R, and other languages found in other environments.
-* [ipywidgets](https://github.com/jupyter-widgets/ipywidgets): Interactive HTML widgets for Jupyter notebooks and the IPython kernel.
+* [jupyter](https://jupyter.org/): Free software, open standards, and web services for interactive computing across all programming languages.
 * [plotly](https://plot.ly/python/offline/): Python interactive graphing library integrated in Jupyter notebooks.
 * [nglview](https://nglviewer.org/#nglview): Jupyter/IPython widget to interactively view molecular structures and trajectories in notebooks.
 * [simpletraj](https://github.com/arose/simpletraj): Lightweight coordinate-only trajectory reader based on code from GROMACS, MDAnalysis and VMD.
+* [pandas](https://pandas.pydata.org/): Open source data analysis and manipulation tool, built on top of the Python programming language.
 
 ### Conda Installation and Launch
 
@@ -92,13 +92,6 @@ conda env create -f conda_env/environment.yml
 conda activate biobb_wf_flexdyn
 jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
 ``` 
-
-Please execute the following commands before launching the Jupyter Notebook if you experience some issues with widgets such as NGL View (3D molecular visualization):
-
-```console
-jupyter-nbextension enable --py --user widgetsnbextension
-jupyter-nbextension enable --py --user nglview
-```
 
 ***
 
