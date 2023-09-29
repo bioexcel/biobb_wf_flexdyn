@@ -12,7 +12,7 @@ dependencies:
   - biobb_analysis==4.1.0
   - jupyter_client==7.3.2
   - ipywidgets==7.6.6
-  #- traitlets==5.9.0
+  - importlib_metadata
   - plotly
   - nglview
   - simpletraj
