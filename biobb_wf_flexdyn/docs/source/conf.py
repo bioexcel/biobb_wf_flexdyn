@@ -36,6 +36,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx_markdown_tables',
+    'sphinx_rtd_theme',
     'recommonmark'
 ]
 
