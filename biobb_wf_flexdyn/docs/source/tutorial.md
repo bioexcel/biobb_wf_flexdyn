@@ -148,7 +148,7 @@ jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
 
  - **Auxiliar libraries**: Libraries to be used in the workflow are imported once at the beginning
 <br><br>
- - **pdbCode**: PDB code of the protein structure (e.g. 1AKE)
+ - **pdbCode**: PDB code of the protein structure (e.g. 1AKE, [https://doi.org/10.2210/pdb1AKE/pdb](https://doi.org/10.2210/pdb1AKE/pdb))
 
 
 ```python
