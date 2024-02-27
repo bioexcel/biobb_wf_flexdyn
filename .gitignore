@@ -24,7 +24,7 @@ biobb_wf_flexdyn/notebooks/*.gif
 biobb_wf_flexdyn/notebooks/*.web.ipynb
 biobb_wf_flexdyn/notebooks/*.docs.ipynb
 biobb_wf_flexdyn/docs/notebooks/
-biobb_wf_flexdyn/docs/notebooks/
+biobb_wf_flexdyn/html/biobb_wf_flexdyn.web.ipynb
 *.old.ipynb
 *.bk.ipynb
 \#*\#
