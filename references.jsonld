@@ -1,0 +1,42 @@
+{
+  "@context": "http://schema.org",
+  "name": "Conformational ensembles generation, data representation and visualization of predicted flexibility properties workflow",
+  "@type": "ItemList",
+  "itemListElement": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://raw.githubusercontent.com/bioexcel/biobb/master/references.jsonld",
+      "name": "biobb"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://raw.githubusercontent.com/bioexcel/biobb_flexserv/master/references.jsonld",
+      "name": "biobb_flexserv"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://raw.githubusercontent.com/bioexcel/biobb_flexdyn/master/references.jsonld",
+      "name": "biobb_flexdyn"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://raw.githubusercontent.com/bioexcel/biobb_io/master/references.jsonld",
+      "name": "biobb_io"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://raw.githubusercontent.com/bioexcel/biobb_structure_utils/master/references.jsonld",
+      "name": "biobb_structure_utils"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://raw.githubusercontent.com/bioexcel/biobb_analysis/master/references.jsonld",
+      "name": "biobb_analysis"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://raw.githubusercontent.com/bioexcel/biobb_gromacs/master/references.jsonld",
+      "name": "biobb_gromacs"
+    }
+  ]
+}
