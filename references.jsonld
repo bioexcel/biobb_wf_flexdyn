@@ -1,7 +1,8 @@
 {
   "@context": "http://schema.org",
-  "name": "Conformational ensembles generation, data representation and visualization of predicted flexibility properties workflow",
+  "@id": "https://github.com/bioexcel/biobb_wf_flexdyn",
   "@type": "ItemList",
+  "name": "Conformational ensembles generation, data representation and visualization of predicted flexibility properties workflow",
   "itemListElement": [
     {
       "@type": "SoftwareApplication",
