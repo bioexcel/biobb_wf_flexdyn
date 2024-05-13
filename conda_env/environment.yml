@@ -3,7 +3,6 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python==3.9
   - biobb_flexdyn==4.1.0
   - biobb_flexserv==4.1.0
   - biobb_io==4.1.1
