@@ -1,8 +1,8 @@
 # Conformational ensembles generation, data representation and visualization of predicted flexibility properties using BioExcel Building Blocks (biobb) and FlexDyn tools
 
-**Workflow included in the [ELIXIR 3D-Bioinfo](https://elixir-europe.org/communities/3d-bioinfo) Implementation Study:**
+## Workflow included in the [ELIXIR 3D-Bioinfo](https://elixir-europe.org/communities/3d-bioinfo) Implementation Study:
 
-**_Building on PDBe-KB to chart and characterize the conformation landscape of native proteins_**
+### _Building on PDBe-KB to chart and characterize the conformation landscape of native proteins_
 
 ***
 
@@ -82,13 +82,15 @@ The notebook is divided in two main blocks:
 
 ### Conda Installation and Launch
 
+Take into account that, for this specific workflow, there are two environment files, one for linux OS and the other for mac OS:
+
 ```console
 git clone https://github.com/bioexcel/biobb_wf_flexdyn.git
 cd biobb_wf_flexdyn
 conda env create -f conda_env/environment.yml
 conda activate biobb_wf_flexdyn
 jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
-``` 
+```
 
 ***
 ## Pipeline steps
@@ -127,6 +129,50 @@ jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
 
 
 ***
+
+## Initializing colab
+The two cells below are used only in case this notebook is executed via **Google Colab**. Take into account that, for running conda on **Google Colab**, the **condacolab** library must be installed. As [explained here](https://pypi.org/project/condacolab/), the installation requires a **kernel restart**, so when running this notebook in **Google Colab**, don't run all cells until this **installation** is properly **finished** and the **kernel** has **restarted**.
+
+
+```python
+# Only executed when using google colab
+import sys
+if 'google.colab' in sys.modules:
+  import subprocess
+  from pathlib import Path
+  try:
+    subprocess.run(["conda", "-V"], check=True)
+  except FileNotFoundError:
+    subprocess.run([sys.executable, "-m", "pip", "install", "condacolab"], check=True)
+    import condacolab
+    condacolab.install()
+    # Clone repository
+    repo_URL = "https://github.com/bioexcel/biobb_wf_flexdyn.git"
+    repo_name = Path(repo_URL).name.split('.')[0]
+    if not Path(repo_name).exists():
+      subprocess.run(["mamba", "install", "-y", "git"], check=True)
+      subprocess.run(["git", "clone", repo_URL], check=True)
+      print("⏬ Repository properly cloned.")
+    # Install environment
+    print("⏳ Creating environment...")
+    env_file_path = f"{repo_name}/conda_env/environment.yml"
+    subprocess.run(["mamba", "env", "update", "-n", "base", "-f", env_file_path], check=True)
+    print("🎨 Install NGLView dependencies...")
+    subprocess.run(["mamba", "install", "-y", "-c", "conda-forge", "nglview==3.0.8", "ipywidgets=7.7.2"], check=True)
+    print("👍 Conda environment successfully created and updated.")
+```
+
+
+```python
+# Enable widgets for colab
+if 'google.colab' in sys.modules:
+  from google.colab import output
+  output.enable_custom_widget_manager()
+  # Change working dir
+  import os
+  os.chdir("biobb_wf_flexdyn/biobb_wf_flexdyn/notebooks")
+  print(f"📂 New working directory: {os.getcwd()}")
+```
 
 <a id="input"></a>
 ## Input parameters
@@ -360,13 +406,20 @@ References: <br>
 
 
 ```python
+import sys
 from biobb_flexdyn.flexdyn.concoord_dist import concoord_dist
 
 concoord_dist_pdb = pdbCode + "_dist.pdb"
 concoord_dist_gro = pdbCode + "_dist.gro"
 concoord_dist_dat = pdbCode + "_dist.dat"
 
-concoord_lib = os.environ['CONDA_PREFIX']+"/share/concoord/lib"
+# set prefix
+prefix = '/usr/local' if 'google.colab' in sys.modules else os.getenv('CONDA_PREFIX') 
+concoord_lib = prefix +"/share/concoord/lib"
+
+# uncomment if executing in google colab
+# %env CONCOORD_OVERWRITE='1'
+# %env CONCOORDLIB=$concoord_lib
 
 prop = {
     'retain_hydrogens' : False,
@@ -387,13 +440,20 @@ concoord_dist(  input_structure_path=monomer,
 
 
 ```python
+import sys
 from biobb_flexdyn.flexdyn.concoord_disco import concoord_disco
 
 concoord_disco_pdb = pdbCode + "_disco_traj.pdb"
 concoord_disco_rmsd = pdbCode + "_disco_rmsd.dat"
 concoord_disco_bfactor = pdbCode + "_disco_bfactor.pdb"
 
-concoord_lib = os.environ['CONDA_PREFIX']+"/share/concoord/lib"
+# set prefix
+prefix = '/usr/local' if 'google.colab' in sys.modules else os.getenv('CONDA_PREFIX') 
+concoord_lib = prefix +"/share/concoord/lib"
+
+# uncomment if executing in google colab
+# %env CONCOORD_OVERWRITE='1'
+# %env CONCOORDLIB=$concoord_lib
 
 prop = {
     'vdw' : 4,
@@ -480,18 +540,18 @@ cpptraj_rms(input_top_path=concoord_dist_pdb,
 ```python
 df = pd.read_csv(concoord_rmsd, header = 0, delimiter='\s+')
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a histogram plot
+fig = go.Figure(data=[go.Histogram(x=df['RMSD_00004'], xbins=dict(size=0.04), autobinx=False)])
 
-fig = {
-    "data": [go.Histogram(x=df['RMSD_00004'], xbins=dict(
-    size=0.04), autobinx=False)],
-    "layout": go.Layout(title="RMSd variance",
-                        xaxis=dict(title = "RMSd (Angstroms)"),
-                        yaxis=dict(title = "Population")
-                       )
-}
+# Update layout
+fig.update_layout(title="RMSd variance",
+                  xaxis_title="RMSd (Ångstroms)",
+                  yaxis_title="Population",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot1.png'></img>
@@ -629,18 +689,18 @@ cpptraj_rms(input_top_path=prody_ensemble,
 ```python
 df = pd.read_csv(prody_rmsd, header = 0, delimiter='\s+')
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a histogram plot
+fig = go.Figure(data=[go.Histogram(x=df['RMSD_00004'], xbins=dict(size=0.04), autobinx=False)])
 
-fig = {
-    "data": [go.Histogram(x=df['RMSD_00004'], xbins=dict(
-    size=0.04), autobinx=False)],
-    "layout": go.Layout(title="RMSd variance",
-                        xaxis=dict(title = "RMSd (Angstroms)"),
-                        yaxis=dict(title = "Population")
-                       )
-}
+# Update layout
+fig.update_layout(title="RMSd variance",
+                  xaxis_title="RMSd (Ångstroms)",
+                  yaxis_title="Population",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot2.png'></img>
@@ -795,18 +855,18 @@ cpptraj_rms(input_top_path=prot_ca,
 ```python
 df = pd.read_csv(flexserv_bd_rmsd, header = 0, delimiter='\s+')
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a histogram plot
+fig = go.Figure(data=[go.Histogram(x=df['RMSD_00004'], xbins=dict(size=0.04), autobinx=False)])
 
-fig = {
-    "data": [go.Histogram(x=df['RMSD_00004'], xbins=dict(
-    size=0.04), autobinx=False)],
-    "layout": go.Layout(title="RMSd variance",
-                        xaxis=dict(title = "RMSd (Angstroms)"),
-                        yaxis=dict(title = "Population")
-                       )
-}
+# Update layout
+fig.update_layout(title="RMSd variance",
+                  xaxis_title="RMSd (Ångstroms)",
+                  yaxis_title="Population",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot3.png'></img>
@@ -931,18 +991,18 @@ cpptraj_rms(input_top_path=prot_ca,
 ```python
 df = pd.read_csv(flexserv_dmd_rmsd, header = 0, delimiter='\s+')
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a histogram plot
+fig = go.Figure(data=[go.Histogram(x=df['RMSD_00004'], xbins=dict(size=0.04), autobinx=False)])
 
-fig = {
-    "data": [go.Histogram(x=df['RMSD_00004'], xbins=dict(
-    size=0.04), autobinx=False)],
-    "layout": go.Layout(title="RMSd variance",
-                        xaxis=dict(title = "RMSd (Angstroms)"),
-                        yaxis=dict(title = "Population")
-                       )
-}
+# Update layout
+fig.update_layout(title="RMSd variance",
+                  xaxis_title="RMSd (Ångstroms)",
+                  yaxis_title="Population",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot4.png'></img>
@@ -1012,6 +1072,9 @@ Once **NMA** is performed and the set of **eigenvectors/eigenvalues** is determi
 # Import module
 from biobb_flexserv.flexserv.nma_run import nma_run
 
+# uncomment if executing in google colab
+# %env CONDA_PREFIX=/usr/local
+
 # Create properties dict and inputs/outputs
 
 nma_log = pdbCode + '_flexserv_nma_ensemble.log'
@@ -1066,18 +1129,18 @@ cpptraj_rms(input_top_path=prot_ca,
 ```python
 df = pd.read_csv(flexserv_nma_rmsd, header = 0, delimiter='\s+')
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a histogram plot
+fig = go.Figure(data=[go.Histogram(x=df['RMSD_00004'], xbins=dict(size=0.04), autobinx=False)])
 
-fig = {
-    "data": [go.Histogram(x=df['RMSD_00004'], xbins=dict(
-    size=0.04), autobinx=False)],
-    "layout": go.Layout(title="RMSd variance",
-                        xaxis=dict(title = "RMSd (Angstroms)"),
-                        yaxis=dict(title = "Population")
-                       )
-}
+# Update layout
+fig.update_layout(title="RMSd variance",
+                  xaxis_title="RMSd (Ångstroms)",
+                  yaxis_title="Population",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot5.png'></img>
@@ -1197,18 +1260,18 @@ cpptraj_rms(input_top_path=prot_ca,
 ```python
 df = pd.read_csv(nolb_rmsd, header = 0, delimiter='\s+')
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a histogram plot
+fig = go.Figure(data=[go.Histogram(x=df['RMSD_00004'], xbins=dict(size=0.04), autobinx=False)])
 
-fig = {
-    "data": [go.Histogram(x=df['RMSD_00004'], xbins=dict(
-    size=0.04), autobinx=False)],
-    "layout": go.Layout(title="RMSd variance",
-                        xaxis=dict(title = "RMSd (Angstroms)"),
-                        yaxis=dict(title = "Population")
-                       )
-}
+# Update layout
+fig.update_layout(title="RMSd variance",
+                  xaxis_title="RMSd (Ångstroms)",
+                  yaxis_title="Population",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot6.png'></img>
@@ -1253,7 +1316,7 @@ view._remote_call('setSize', target='Widget', args=['','600px'])
 view
 ```
 
-<img src='_static/traj6.png'></img>
+<img src='_static/traj6.gif'></img>
 
 <a id="imod"></a>
 ***
@@ -1350,18 +1413,18 @@ cpptraj_rms(input_top_path=imc_pdb,
 ```python
 df = pd.read_csv(imods_rmsd, header = 0, delimiter='\s+')
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a histogram plot
+fig = go.Figure(data=[go.Histogram(x=df['RMSD_00004'], xbins=dict(size=0.04), autobinx=False)])
 
-fig = {
-    "data": [go.Histogram(x=df['RMSD_00004'], xbins=dict(
-    size=0.04), autobinx=False)],
-    "layout": go.Layout(title="RMSd variance",
-                        xaxis=dict(title = "RMSd (Angstroms)"),
-                        yaxis=dict(title = "Population")
-                       )
-}
+# Update layout
+fig.update_layout(title="RMSd variance",
+                  xaxis_title="RMSd (Ångstroms)",
+                  yaxis_title="Population",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot7.png'></img>
@@ -1481,8 +1544,8 @@ prop = {
     'fit_selection': 'System',
     'output_selection': 'System',
     'method': 'linkage',
-    'cutoff': 0.12 # (0.12 nm = 1.2 Angstroms) 
-    #'cutoff': 0.15 # (0.15 nm = 1.5 Angstroms) 
+    'cutoff': 0.12 # (0.12 nm = 1.2 Ångstroms) 
+    #'cutoff': 0.15 # (0.15 nm = 1.5 Ångstroms) 
 }
 
 gmx_cluster(input_structure_path=prot_ca,
@@ -1642,17 +1705,18 @@ print(json.dumps(pcz_info, indent=2))
 y = np.array(pcz_info['Eigen_Values'])
 x = list(range(1,len(y)+1))
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a scatter plot
+fig = go.Figure(data=[go.Scatter(x=x, y=y)])
 
-fig = {
-    "data": [go.Scatter(x=x, y=y)],
-    "layout": go.Layout(title="Variance Profile",
-                        xaxis=dict(title = "Principal Component"),
-                        yaxis=dict(title = "Variance")
-                       )
-}
+# Update layout
+fig.update_layout(title="Variance Profile",
+                  xaxis_title="Principal Component",
+                  yaxis_title="Variance",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot8.png'></img>
@@ -1671,17 +1735,18 @@ Note that this plot and the previous one provide **physically-different** inform
 y = np.array(pcz_info['Eigen_Values_dimensionality_vs_total'])
 x = list(range(1,len(y)+1))
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a scatter plot
+fig = go.Figure(data=[go.Scatter(x=x, y=y)])
 
-fig = {
-    "data": [go.Scatter(x=x, y=y)],
-    "layout": go.Layout(title="Dimensionality/Quality profile",
-                        xaxis=dict(title = "Principal Component"),
-                        yaxis=dict(title = "Accumulated Quality (%)")
-                       )
-}
+# Update layout
+fig.update_layout(title="Dimensionality/Quality profile",
+                  xaxis_title="Principal Component",
+                  yaxis_title="Accumulated Quality (%)",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot9.png'></img>
@@ -1734,17 +1799,18 @@ print(json.dumps(pcz_evecs_report_json, indent=2))
 y = np.array(pcz_evecs_report_json['projs'])
 x = list(range(1,len(y)+1))
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a bar plot
+fig = go.Figure(data=[go.Bar(x=x, y=y)])
 
-fig = {
-    "data": [go.Bar(x=x, y=y)],
-    "layout": go.Layout(title="Eigen Value Residue Components",
-                        xaxis=dict(title = "Residue Number"),
-                        yaxis=dict(title = "\u00C5")
-                       )
-}
+# Update layout
+fig.update_layout(title="Eigen Value Residue Components",
+                  xaxis_title="Residue Number",
+                  yaxis_title="\u00C5",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot10.png'></img>
@@ -1787,15 +1853,15 @@ pcz_animate( input_pcz_path=concat_pcz,
 ```python
 from biobb_analysis.ambertools.cpptraj_convert import cpptraj_convert
 
-proj1_dcd = pdbCode + '_pcz_proj1.dcd'
+proj1_xtc = pdbCode + '_pcz_proj1.xtc'
 
 prop = {
-    'format': 'dcd'
+    'format': 'xtc'
 }
 
 cpptraj_convert(input_top_path=prot_ca,
                 input_traj_path=proj1,
-                output_cpptraj_path=proj1_dcd,
+                output_cpptraj_path=proj1_xtc,
                 properties=prop)
 ```
 
@@ -1806,7 +1872,7 @@ cpptraj_convert(input_top_path=prot_ca,
 
 ```python
 # Show trajectory
-view = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_dcd, prot_ca), gui=True)
+view = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_xtc, prot_ca), gui=True)
 #view.add_representation(repr_type='spacefill', radius=0.7, selection='all')
 view.add_representation(repr_type='surface', selection='all')
 view.center()
@@ -1863,17 +1929,18 @@ pcz_bfactor(
 y = np.loadtxt(bfactor_all_dat)
 x = list(range(1,len(y)+1))
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a scatter plot
+fig = go.Figure(data=[go.Scatter(x=x, y=y)])
 
-fig = {
-    "data": [go.Scatter(x=x, y=y)],
-    "layout": go.Layout(title="Bfactor x Residue x PCA Modes (All)",
-                        xaxis=dict(title = "Residue Number"),
-                        yaxis=dict(title = "Bfactor (" + '\u00C5' +'\u00B2' + ")")
-                       )
-}
+# Update layout
+fig.update_layout(title="Bfactor x Residue x PCA Modes (All)",
+                  xaxis_title="Residue Number",
+                  yaxis_title="Bfactor (" + '\u00C5' +'\u00B2' + ")",
+                  height=600)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot11.png'></img>
@@ -1887,7 +1954,7 @@ Visualizing the **trajectory** highlighting the **residues** with higher **B-fac
 
 ```python
 # Show trajectory
-view = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_dcd, bfactor_all_pdb))
+view = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_xtc, bfactor_all_pdb))
 view.add_representation(repr_type='spacefill', selection='all', colorScheme='bfactor')
 view.add_representation(repr_type='tube', radius='0.4', selection='all', color='white')
 view._remote_call('setSize', target='Widget', args=['','600px'])
@@ -1905,10 +1972,10 @@ def loop(view):
             time.sleep(0.2)
     view._run_on_another_thread(do)
         
-view.on_displayed(loop)
+#view.on_displayed(loop)
 
-view._iplayer.children[0].disabled = True
-view._iplayer.children[1].disabled = True
+#view._iplayer.children[0].disabled = True
+#view._iplayer.children[1].disabled = True
 
 view
 ```
@@ -1996,39 +2063,25 @@ print(json.dumps(hinges_fcte, indent=2))
 
 ```python
 # Show trajectory
-view1 = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_dcd, bfactor_all_pdb), gui=True)
+view1 = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_xtc, bfactor_all_pdb), gui=True)
 view1.add_representation(repr_type='surface', selection=hinges_dyndom["clusters"][0]["residues"], color='red')
 view1.add_representation(repr_type='surface', selection=hinges_dyndom["clusters"][1]["residues"], color='green')
 #view1.add_representation(repr_type='surface', selection=hinges_dyndom["clusters"][2]["residues"], color='yellow')
 #view1.add_representation(repr_type='surface', selection=hinges_dyndom["hinge_residues"], color='red')
 view1._remote_call('setSize', target='Widget', args=['350px','350px'])
 view1
-view2 = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_dcd, bfactor_all_pdb), gui=True)
+view2 = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_xtc, bfactor_all_pdb), gui=True)
 view2.add_representation(repr_type='surface', selection=hinges_bfactor["hinge_residues"], color='red')
 view2._remote_call('setSize', target='Widget', args=['350px','350px'])
 view2
-view3 = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_dcd, bfactor_all_pdb), gui=True)
+view3 = nglview.show_simpletraj(nglview.SimpletrajTrajectory(proj1_xtc, bfactor_all_pdb), gui=True)
 view3.add_representation(repr_type='surface', selection=str(hinges_fcte["hinge_residues"]), color='red')    
 view3._remote_call('setSize', target='Widget', args=['350px','350px'])
 view3
 ipywidgets.HBox([view1, view2, view3])
 ```
 
-<img src='_static/ngl6.png'></img>
-
-<a id="stiffness"></a>
-***
-## Apparent Stiffness
-
-**Stiffness** is defined as the **force-constant** acting between **two residues** in the case of completely disconnected oscillators. The index helps to detect **strong interactions between residues**, which might indicate physically-intense **direct contacts** or **strong chain-related interactions**. Results are usually plot as a **2D NxN heatmap plot** (with N being the number of residues).
-
-The **pcz_stiffness** building block returns the **stiffness** force-constants associated to a given **eigenvector**. 
-
-***
-**Building Blocks** used:
- - [pcz_stiffness](https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#pcasuite-pcz-stiffness-module) from **biobb_flexserv.pcasuite.pcz_stiffness**
-***
-***
+<img src='_static/traj10.gif' style="float:left;width:33%;"></img><img src='_static/traj11.gif' style="float:left;width:33%;"></img><img src='_static/traj12.gif' style="float:left;width:33%;"></img>
 
 
 ```python
@@ -2047,6 +2100,20 @@ pcz_stiffness(
 )
 ```
 
+<a id="stiffness"></a>
+***
+## Apparent Stiffness
+
+**Stiffness** is defined as the **force-constant** acting between **two residues** in the case of completely disconnected oscillators. The index helps to detect **strong interactions between residues**, which might indicate physically-intense **direct contacts** or **strong chain-related interactions**. Results are usually plot as a **2D NxN heatmap plot** (with N being the number of residues).
+
+The **pcz_stiffness** building block returns the **stiffness** force-constants associated to a given **eigenvector**. 
+
+***
+**Building Blocks** used:
+ - [pcz_stiffness](https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#pcasuite-pcz-stiffness-module) from **biobb_flexserv.pcasuite.pcz_stiffness**
+***
+***
+
 ***
 ### Plotting the Apparent Stiffness matrix
 ***
@@ -2063,18 +2130,19 @@ print(json.dumps(pcz_stiffness_report, indent=2))
 y = np.array(pcz_stiffness_report['stiffness'])
 x = list(range(1,len(y)))
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a heatmap plot
+fig = go.Figure(data=[go.Heatmap(x=x, y=x, z=y, type = 'heatmap', colorscale = 'reds')])
 
-fig = {
-    "data": [go.Heatmap(x=x, y=x, z=y, type = 'heatmap', colorscale = 'reds')],
-    "layout": go.Layout(title="Apparent Stiffness",
-                        xaxis=dict(title = "Residue Number"),
-                        yaxis=dict(title = "Residue Number"),
-                        width=800, height=800
-                       )
-}
+# Update layout
+fig.update_layout(title="Apparent Stiffness",
+                  xaxis_title="Residue Number",
+                  yaxis_title="Residue Number",
+                  width=800,
+                  height=800)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot12.png'></img>
@@ -2088,18 +2156,19 @@ plotly.offline.iplot(fig)
 y = np.array(pcz_stiffness_report['stiffness_log'])
 x = list(range(1,len(y)))
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a heatmap plot
+fig = go.Figure(data=[go.Heatmap(x=x, y=x, z=y, type = 'heatmap', colorscale = 'reds')])
 
-fig = {
-    "data": [go.Heatmap(x=x, y=x, z=y, type = 'heatmap', colorscale = 'reds')],
-    "layout": go.Layout(title="Apparent Stiffness (Logarithmic Scale)",
-                        xaxis=dict(title = "Residue Number"),
-                        yaxis=dict(title = "Residue Number"),
-                        width=800, height=800
-                       )
-}
+# Update layout
+fig.update_layout(title="Apparent Stiffness (Logarithmic Scale)",
+                  xaxis_title="Residue Number",
+                  yaxis_title="Residue Number",
+                  width=800,
+                  height=800)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot13.png'></img>
@@ -2154,18 +2223,19 @@ x = ["PC" + str(pc) for pc in x]
 
 y = [""]
 
-plotly.offline.init_notebook_mode(connected=True)
+# Create a heatmap plot
+fig = go.Figure(data=[go.Heatmap(x=x, y=y, z=[z], type = 'heatmap', colorscale = 'reds')])
 
-fig = {
-    "data": [go.Heatmap(x=x, y=y, z=[z], type = 'heatmap', colorscale = 'reds')],
-    "layout": go.Layout(title="Collectivity Index",
-                        xaxis=dict(title = "Principal Component"),
-                        yaxis=dict(title = "Collectivity"),
-                        width=1000, height=300
-                       )
-}
+# Update layout
+fig.update_layout(title="Collectivity Index",
+                  xaxis_title="Principal Component",
+                  yaxis_title="Collectivity",
+                  width=1000,
+                  height=300)
 
-plotly.offline.iplot(fig)
+# Show the figure (renderer changes for colab and jupyter)
+rend = 'colab' if 'google.colab' in sys.modules else ''
+fig.show(renderer=rend)
 ```
 
 <img src='_static/plot14.png'></img>
@@ -2183,3 +2253,8 @@ Questions, issues, suggestions and comments are really welcome!
 * BioExcel forum:
     * [https://ask.bioexcel.eu/c/BioExcel-Building-Blocks-library](https://ask.bioexcel.eu/c/BioExcel-Building-Blocks-library)
 
+
+
+```python
+
+```
