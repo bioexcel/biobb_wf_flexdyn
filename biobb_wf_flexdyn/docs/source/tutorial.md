@@ -1316,7 +1316,7 @@ view._remote_call('setSize', target='Widget', args=['','600px'])
 view
 ```
 
-<img src='_static/traj6.gif'></img>
+<img src='_static/traj6.png'></img>
 
 <a id="imod"></a>
 ***
