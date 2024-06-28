@@ -7720,6 +7720,7 @@ Such tools make use of a potential to represent intra-molecular interactions and
 <span class="kn">import</span> <span class="nn">nglview</span>
 <span class="kn">import</span> <span class="nn">simpletraj</span>
 <span class="kn">import</span> <span class="nn">plotly</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="nn">go</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -8125,8 +8126,7 @@ Alternatively, a <strong>PDB file</strong> can be used as starting structure. <b
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">biobb_flexdyn.flexdyn.concoord_dist</span> <span class="kn">import</span> <span class="n">concoord_dist</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">biobb_flexdyn.flexdyn.concoord_dist</span> <span class="kn">import</span> <span class="n">concoord_dist</span>
 
 <span class="n">concoord_dist_pdb</span> <span class="o">=</span> <span class="n">pdbCode</span> <span class="o">+</span> <span class="s2">"_dist.pdb"</span>
 <span class="n">concoord_dist_gro</span> <span class="o">=</span> <span class="n">pdbCode</span> <span class="o">+</span> <span class="s2">"_dist.gro"</span>
@@ -8167,8 +8167,7 @@ Alternatively, a <strong>PDB file</strong> can be used as starting structure. <b
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">biobb_flexdyn.flexdyn.concoord_disco</span> <span class="kn">import</span> <span class="n">concoord_disco</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">biobb_flexdyn.flexdyn.concoord_disco</span> <span class="kn">import</span> <span class="n">concoord_disco</span>
 
 <span class="n">concoord_disco_pdb</span> <span class="o">=</span> <span class="n">pdbCode</span> <span class="o">+</span> <span class="s2">"_disco_traj.pdb"</span>
 <span class="n">concoord_disco_rmsd</span> <span class="o">=</span> <span class="n">pdbCode</span> <span class="o">+</span> <span class="s2">"_disco_rmsd.dat"</span>
@@ -11279,20 +11278,6 @@ N</strong>. The <strong>equation of motion</strong>, corresponding to <strong>co
 </ul>
 </li>
 </ul>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-</div>
 </div>
 </div>
 </div>

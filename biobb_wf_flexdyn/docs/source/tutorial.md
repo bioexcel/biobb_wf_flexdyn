@@ -188,6 +188,7 @@ import os
 import nglview
 import simpletraj
 import plotly
+import sys
 import plotly.graph_objs as go
 import numpy as np
 import pandas as pd
@@ -406,7 +407,6 @@ References: <br>
 
 
 ```python
-import sys
 from biobb_flexdyn.flexdyn.concoord_dist import concoord_dist
 
 concoord_dist_pdb = pdbCode + "_dist.pdb"
@@ -440,7 +440,6 @@ concoord_dist(  input_structure_path=monomer,
 
 
 ```python
-import sys
 from biobb_flexdyn.flexdyn.concoord_disco import concoord_disco
 
 concoord_disco_pdb = pdbCode + "_disco_traj.pdb"
@@ -2252,9 +2251,3 @@ Questions, issues, suggestions and comments are really welcome!
 
 * BioExcel forum:
     * [https://ask.bioexcel.eu/c/BioExcel-Building-Blocks-library](https://ask.bioexcel.eu/c/BioExcel-Building-Blocks-library)
-
-
-
-```python
-
-```
