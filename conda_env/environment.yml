@@ -13,6 +13,6 @@ dependencies:
   - biobb_analysis==5.2.0
   - jupyter
   - plotly
-  - nglview
+  - nglview<=4.0
   - simpletraj
   - pandas
