@@ -15,4 +15,5 @@ dependencies:
   - plotly
   - nglview<=4.0
   - simpletraj
+  - setuptools<81
   - pandas

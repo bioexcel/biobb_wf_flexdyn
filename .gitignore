@@ -17,6 +17,7 @@ log*.*
 *.stdin
 *.proj
 *.out
+*.xtc
 !logo.png
 .ipynb_checkpoints/
 biobb_wf_flexdyn/notebooks/*.png
