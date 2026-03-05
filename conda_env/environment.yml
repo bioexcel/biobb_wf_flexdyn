@@ -15,5 +15,6 @@ dependencies:
   - plotly
   - nglview<=4.0
   - simpletraj
-  - setuptools<81  # osx
+  # - setuptools<81  # osx
+  - biopython<1.80
   - pandas
