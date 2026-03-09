@@ -4,12 +4,12 @@ channels:
   - bioconda
 dependencies:
   - python=3.11
-  - biobb_flexdyn==5.2.0=py311h362c646_4
-  - biobb_flexserv==5.2.0=py311pl5321h362c646_4
-  - biobb_io==5.2.0
-  - biobb_structure_utils==5.2.0
-  - biobb_gromacs==5.2.0
-  - biobb_analysis==5.2.0
+  - biobb_flexdyn==5.2.1
+  - biobb_flexserv==5.2.1
+  - biobb_io==5.2.3
+  - biobb_structure_utils==5.2.1
+  - biobb_gromacs==5.2.1
+  - biobb_analysis==5.2.1
   - plotly
   - jupyterlab=3.6
   - nodejs=16
