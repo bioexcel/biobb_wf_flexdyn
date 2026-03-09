@@ -2,6 +2,7 @@ name: biobb_wf_flexdyn
 channels:
   - conda-forge
   - bioconda
+  - nodefaults
 dependencies:
   - python=3.11
   - biobb_flexdyn==5.2.1
