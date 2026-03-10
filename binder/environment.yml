@@ -4,7 +4,6 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  # - python=3.11
   - biobb_flexdyn==5.2.2
   - biobb_flexserv==5.2.1
   - biobb_io==5.2.3
