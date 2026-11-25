@@ -94,6 +94,8 @@ conda activate biobb_wf_flexdyn
 jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
 ``` 
 
+**Note for macOS:** this tutorial does not work on macOS for now. On a Mac the environment installs without AmberTools (the `imods` package pins an old `arpack` that current AmberTools cannot use), so the steps that need `cpptraj` fail. Mac users can run it in Binder (link below).
+
 ***
 
 ## Tutorial
