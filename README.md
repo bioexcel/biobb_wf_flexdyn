@@ -94,7 +94,13 @@ conda activate biobb_wf_flexdyn
 jupyter-notebook biobb_wf_flexdyn/notebooks/biobb_wf_flexdyn.ipynb
 ``` 
 
-**Note for macOS:** this tutorial does not work on macOS for now. On a Mac the environment installs without AmberTools (the `imods` package pins an old `arpack` that current AmberTools cannot use), so the steps that need `cpptraj` fail. Mac users can run it in Binder (link below).
+**Note for macOS (Apple Silicon):** some packages of this tutorial have no Apple Silicon build. Create the environment with the Intel packages, which macOS runs through Rosetta 2:
+
+```console
+CONDA_SUBDIR=osx-64 conda env create -f conda_env/environment.yml
+conda activate biobb_wf_flexdyn
+conda config --env --set subdir osx-64
+```
 
 ***
 
