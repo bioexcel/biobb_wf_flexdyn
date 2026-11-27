@@ -80,8 +80,7 @@ The particular structure used is the **complex between ADENYLATE KINASE from Esc
 
 * [jupyter](https://jupyter.org/): Free software, open standards, and web services for interactive computing across all programming languages.
 * [plotly](https://plot.ly/python/offline/): Python interactive graphing library integrated in Jupyter notebooks.
-* [nglview](https://nglviewer.org/#nglview): Jupyter/IPython widget to interactively view molecular structures and trajectories in notebooks.
-* [simpletraj](https://github.com/arose/simpletraj): Lightweight coordinate-only trajectory reader based on code from GROMACS, MDAnalysis and VMD.
+* [molviewspec](https://molstar.org/mol-view-spec/): Python toolkit to describe molecular scenes and display them with the [Mol*](https://molstar.org/) viewer in notebooks.
 * [pandas](https://pandas.pydata.org/): Open source data analysis and manipulation tool, built on top of the Python programming language.
 
 ### Conda Installation and Launch

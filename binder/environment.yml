@@ -11,9 +11,7 @@ dependencies:
   - biobb_gromacs==5.3.2
   - biobb_analysis==5.3.0
   - plotly
-  - jupyterlab=3.6
-  - nodejs=16
-  - ipywidgets=7
-  - nglview
-  - simpletraj
+  - molviewspec>=1.8
+  # AmberTools 26 breaks the binder build (mamba clean): https://github.com/conda-forge/ambertools-feedstock/issues/193
+  - ambertools<26
   - pandas
